@@ -128,6 +128,23 @@ class ProductDatabase:
         conn.close()
 
 
+    def update_lowest_price(self, product_id: int, price: float, date: str) -> None:
+        """Update the lowest price data for a product"""
+        logger.info("Updating lowest price data for product_id: %d", product_id)
+        conn = sqlite3.connect(self.db_file)
+        cur = conn.cursor()
+
+        cur.execute("""
+            UPDATE products
+            SET lowest_price = ?,
+                lowest_price_date = ?
+            WHERE id = ?
+        """, (price, date, product_id))
+
+        conn.commit()
+        conn.close()
+
+
     def get_product_id_list(self) -> list[int]:
         """Return list of all product IDs"""
         conn = sqlite3.connect(self.db_file)

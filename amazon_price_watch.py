@@ -82,6 +82,9 @@ def update_all_prices() -> None:
             now = datetime.now().isoformat()
             db.add_price_history(product_id, amazon_product.price, now)
 
+            if amazon_product.price < product_info.lowest_price:
+                db.update_lowest_price(product_id, amazon_product.price, now)
+
 
 def get_lower_price_lisst() -> list[int]:
     """Return a list of product_id with latest price lower than price when added"""
