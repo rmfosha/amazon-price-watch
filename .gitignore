@@ -1,0 +1,10 @@
+__pycache__/
+
+# environment variables
+.env
+
+# logs
+logs/
+
+# database
+database/
