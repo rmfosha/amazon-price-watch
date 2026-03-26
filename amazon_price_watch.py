@@ -6,6 +6,7 @@ import logging
 from amazon import get_amazon_product_from_url
 from logging_config import setup_logging
 from product_database import ProductDatabase
+from send_email import send_price_alert_email
 
 
 setup_logging(logging.INFO)
@@ -38,6 +39,12 @@ def parse_args():
         "--update",
         action="store_true",
         help="Update all product prices in database"
+    )
+
+    parser.add_argument(
+        "--send",
+        action="store_true",
+        help="Send email alert if any lower prices"
     )
 
     return parser.parse_args()
@@ -109,9 +116,11 @@ def main() -> None:
         print_products()
     elif args.update:
         update_all_prices()
-        lower_price_product_id_list = get_lower_price_lisst()
-        if lower_price_product_id_list:
-            print(lower_price_product_id_list)
+        if args.send:
+            lower_price_product_id_list = get_lower_price_lisst()
+            if lower_price_product_id_list:
+                email_sent_status_msg = send_price_alert_email(lower_price_product_id_list)
+                logger.info(email_sent_status_msg)
     else:
         print("No option selected. Use --help for detials.")
 

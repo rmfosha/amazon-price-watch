@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f6f6f6; padding: 20px;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; padding: 20px;">
+    
+    <tr>
+      <td style="text-align: center;">
+        <h2 style="color: #2c3e50; margin-bottom: 10px;">New Price Drops!</h2>
+        <p style="color: #555;">One or more items hit a new lowest price.</p>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <table width="100%" cellpadding="10" cellspacing="0" style="border-collapse: collapse;">
+          
+          <tr style="background-color: #f0f0f0;">
+            <th align="left">Product</th>
+            <th align="left">Price when added</th>
+            <th align="left">New Price</th>
+            <th align="left">Link</th>
+          </tr>
+
+          <!-- REPEAT THIS ROW FOR EACH PRODUCT -->
+          {{ ROWS }}
+
+        </table>
+      </td>
+    </tr>
+
+    <tr>
+      <td style="padding-top: 20px; text-align: center; color: #888; font-size: 12px;">
+        Amazon Price Tracker Bot
+      </td>
+    </tr>
+
+  </table>
+
+</body>
+</html>
