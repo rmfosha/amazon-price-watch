@@ -30,6 +30,12 @@ def parse_args():
     )
 
     parser.add_argument(
+        "--reset_product",
+        type=int,
+        help="Reset initial price and price history for given product ID"
+    )
+
+    parser.add_argument(
         "--list",
         action="store_true",
         help="List all products in database"
@@ -48,6 +54,27 @@ def parse_args():
     )
 
     return parser.parse_args()
+
+
+def add_product(product_url: str) -> None:
+    """Add a product to the database from product URL"""
+    db = ProductDatabase()
+    amazon_product = get_amazon_product_from_url(product_url)
+    now = datetime.now().isoformat()
+    db.add_product(amazon_product.url, amazon_product.name, now, amazon_product.price)
+
+
+def reset_product(product_id: int) -> None:
+    """Reset product info and price history for a given product ID"""
+    db = ProductDatabase()
+
+    product_info = db.get_product_from_id(product_id)
+    if not product_info:
+        logger.info("Could not find product id '%d'", product_id)
+        return
+
+    db.remove_product_by_id(product_id)
+    add_product(product_info.url)
 
 
 def print_products() -> None:
@@ -108,13 +135,12 @@ def main() -> None:
 
     args = parse_args()
     if args.add:
-        db = ProductDatabase()
-        amazon_product = get_amazon_product_from_url(args.add)
-        now = datetime.now().isoformat()
-        db.add_product(amazon_product.url, amazon_product.name, now, amazon_product.price)
+        add_product(args.add)
     elif args.remove:
         db = ProductDatabase()
         db.remove_product_by_id(args.remove)
+    elif args.reset_product:
+        reset_product(args.reset_product)
     elif args.list:
         print_products()
     elif args.update:
