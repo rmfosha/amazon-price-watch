@@ -180,6 +180,7 @@ class ProductDatabase:
         id_list = [row[0] for row in results]
         conn.close()
 
+        id_list.sort()
         return id_list
 
 
