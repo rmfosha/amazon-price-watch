@@ -25,8 +25,8 @@ def parse_args():
 
     parser.add_argument(
         "--remove",
-        type=str.lower,
-        help="URL for Amazon product to remove"
+        type=int,
+        help="ID for Amazon product to remove"
     )
 
     parser.add_argument(
@@ -114,7 +114,7 @@ def main() -> None:
         db.add_product(amazon_product.url, amazon_product.name, now, amazon_product.price)
     elif args.remove:
         db = ProductDatabase()
-        db.remove_product(args.remove)
+        db.remove_product_by_id(args.remove)
     elif args.list:
         print_products()
     elif args.update:

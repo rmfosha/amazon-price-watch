@@ -102,8 +102,33 @@ class ProductDatabase:
         conn.close()
 
 
-    def remove_product(self, url: str) -> None:
-        """Delete product from prooducts and price_history table"""
+    def remove_product_by_id(self, product_id: int) -> None:
+        """Delete product from prooducts and price_history table by using product id"""
+        conn = sqlite3.connect(self.db_file)
+        cur = conn.cursor()
+
+        cur.execute("SELECT id FROM products WHERE id = ?", (product_id,))
+        result = cur.fetchone()
+
+        if result is None:
+            logger.info("Product id '%d' does not exist in database", product_id)
+            conn.close()
+            return
+
+        logger.info("Removing product '%d' from products and price_history", product_id)
+        cur.execute("""
+            DELETE FROM products WHERE id = ?
+        """, (product_id,))
+        cur.execute("""
+            DELETE FROM price_history WHERE product_id = ?
+        """, (product_id,))
+
+        conn.commit()
+        conn.close()
+
+
+    def remove_product_by_url(self, url: str) -> None:
+        """Delete product from prooducts and price_history table by using product url"""
         conn = sqlite3.connect(self.db_file)
         cur = conn.cursor()
 
