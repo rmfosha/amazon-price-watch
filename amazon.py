@@ -38,7 +38,8 @@ def get_amazon_product_from_url(url: str) -> AmazonProduct | None:
             logger.error("Could not find product name on page '%s'", url)
             return None
 
-        price_whole = soup.find("span", class_="a-price-whole")
+        price_area = soup.find("div", id="corePriceDisplay_desktop_feature_div")
+        price_whole = price_area.find("span", class_="a-price-whole")
         if not price_whole:
             logger.error("Could not find price_whole on page '%s'", url)
             return None
