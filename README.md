@@ -8,12 +8,14 @@
 - Store tracked products and price history in a SQLite database
 - Update the latest price for every tracked product
 - List tracked products, including current and lowest observed prices
+- Remove tracked products by product ID
+- Reset a tracked product by product ID, refreshing its initial price and price history
 - Send an HTML email alert for products now cheaper than their original tracked price
 - Write logs to both the console and `logs/app.log`
 
 ## Requirements
 
-- Python 3.14 or compatible Python 3.x environment
+- Python 3.10 or newer
 - Internet access to fetch Amazon product pages
 - SMTP credentials if you want to send email alerts
 
@@ -74,10 +76,18 @@ This fetches the product title and current price from Amazon, then stores:
 ### Remove a product
 
 ```powershell
-python amazon_price_watch.py --remove "https://www.amazon.com/dp/ASIN"
+python amazon_price_watch.py --remove 1
 ```
 
-This removes the product from both the `products` and `price_history` tables.
+This removes the product with the given ID from both the `products` and `price_history` tables.
+
+### Reset a product
+
+```powershell
+python amazon_price_watch.py --reset_product 1
+```
+
+This removes the product with the given ID, fetches it again from its stored URL, and recreates its initial product and price history records using the current Amazon price.
 
 ### List tracked products
 
