@@ -19,18 +19,21 @@ def parse_args():
 
     parser.add_argument(
         "--add",
+        metavar='URL',
         type=str.lower,
         help="URL for Amazon product to add"
     )
 
     parser.add_argument(
         "--remove",
+        metavar='PRODUCT_ID',
         type=int,
         help="ID for Amazon product to remove"
     )
 
     parser.add_argument(
         "--reset_product",
+        metavar='PRODUCT_ID',
         type=int,
         help="Reset initial price and price history for given product ID"
     )
