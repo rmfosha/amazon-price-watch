@@ -3,6 +3,7 @@
 import argparse
 from datetime import datetime
 import logging
+import re
 from amazon import get_amazon_product_from_url
 from logging_config import setup_logging
 from product_database import ProductDatabase
@@ -11,6 +12,26 @@ from send_email import send_price_alert_email
 
 setup_logging(logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+def valid_email(email_to_validate: str) -> str:
+    """Return a normalized email address or raise an argparse validation error."""
+    email = email_to_validate.strip().lower()
+    email_pattern = re.compile(
+        r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+"
+        r"(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*"
+        r"@"
+        r"(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+"
+        r"[a-z]{2,63}$"
+    )
+
+    if len(email) > 254 or not email_pattern.fullmatch(email):
+        logger.error("'%s' is not a vaild email address", email_to_validate)
+        raise argparse.ArgumentTypeError(
+            f"'{email_to_validate}' is not a valid email address"
+        )
+
+    return email
 
 
 def parse_args():
@@ -52,7 +73,8 @@ def parse_args():
 
     parser.add_argument(
         "--send",
-        action="store_true",
+        metavar='EMAIL',
+        type=valid_email,
         help="Send email alert if any lower prices"
     )
 
@@ -151,7 +173,8 @@ def main() -> None:
         if args.send:
             lower_price_product_id_list = get_lower_price_lisst()
             if lower_price_product_id_list:
-                email_sent_status_msg = send_price_alert_email(lower_price_product_id_list)
+                email_sent_status_msg = send_price_alert_email(lower_price_product_id_list,
+                                                               args.send)
                 logger.info(email_sent_status_msg)
     else:
         print("No option selected. Use --help for detials.")

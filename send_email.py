@@ -52,7 +52,7 @@ def build_email(product_id_list: list[int]) -> str:
     return email_html
 
 
-def send_price_alert_email(product_id_list: list[int]) -> str:
+def send_price_alert_email(product_id_list: list[int], send_to_email: str) -> str:
     """Send an email with new price information"""
     logger.info("Generating and sending alert email.")
 
@@ -66,7 +66,7 @@ def send_price_alert_email(product_id_list: list[int]) -> str:
     msg = EmailMessage()
     msg["Subject"] = "Amazon Price Watch Alert"
     msg["From"] = formataddr((sender_email_name, sender_email_addr))
-    msg["To"] = sender_email_addr
+    msg["To"] = send_to_email
 
     html_content = build_email(product_id_list)
     soup = BeautifulSoup(html_content, "html.parser")
