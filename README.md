@@ -10,7 +10,7 @@
 - List tracked products, including current and lowest observed prices
 - Remove tracked products by product ID
 - Reset a tracked product by product ID, refreshing its initial price and price history
-- Send an HTML email alert for products now cheaper than their original tracked price
+- Send an HTML email alert to a specified recipient for products now cheaper than their original tracked price
 - Write logs to both the console and `logs/app.log`
 
 ## Requirements
@@ -118,10 +118,16 @@ This fetches the current price for each tracked product and appends a new record
 ### Update prices and send alerts
 
 ```powershell
-python amazon_price_watch.py --update --send
+python amazon_price_watch.py --update --send "recipient@example.com"
 ```
 
-After updating prices, the script emails a summary of any products whose latest price is lower than the price recorded when they were first added.
+After updating prices, the script emails the specified recipient a summary of any products whose latest price is lower than the price recorded when they were first added.
+
+The recipient must be a valid email address. Leading and trailing whitespace is removed, and the address is normalized to lowercase. An invalid address stops the command before prices are updated or an email is sent:
+
+```text
+amazon_price_watch.py: error: argument --send: 'invalid-address' is not a valid email address
+```
 
 ## Database and Logs
 
